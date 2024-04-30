@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>POW Reports - Results</title>
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+            background-color: #f2f2f2;
+            margin: 50px auto; /* Center the content vertically and horizontally */
+            padding: 20px;
+            max-width: 800px; /* Set maximum width for content */
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none; /* Remove bullet points from unordered list */
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px; /* Add margin between list items */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px; /* Add margin at the top of the table */
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        img.logo {
+            display: block; /* Ensure images are centered */
+            margin: 0 auto 20px; /* Center images horizontally and add margin at the bottom */
+            max-width: 200px; /* Adjust as needed */
+            max-height: 200px; /* Adjust as needed */
+        }
+
+        img.visualization {
+            display: block; /* Ensure images are centered */
+            margin: 20px auto; /* Center images horizontally and add margin at the top and bottom */
+            max-width: 100%; /* Ensure images don't exceed container width */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+<body>
+<div class="logo-container">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+</div>
+<h1>POW Reports - Results</h1>
+
+<!-- Display the bar chart for Total Sold Units by Strain -->
+<h2>Total Sold Units by Strain (Bar Chart)</h2>
+<img src="data:image/png;base64,{{ plot_base64 }}" alt="Total Sold Units by Strain" class="visualization">
+
+<!-- Display the bar chart for Total Sold Units by Type -->
+<h2>Total Sold Units by Type (Bar Chart)</h2>
+<img src="data:image/png;base64,{{ plot_type_base64 }}" alt="Total Sold Units by Type" class="visualization">
+
+<!-- Display the bar chart for Total Sold Units by Device -->
+<h2>Total Sold Units by Device (Bar Chart)</h2>
+<img src="data:image/png;base64,{{ plot_device_base64 }}" alt="Total Sold Units by Device" class="visualization">
+
+<!-- Display the total sold units by type -->
+<h2>Total Sold Units by Type</h2>
+<ul>
+  {% for type, sold_units in total_sold_units_by_type.items() %}
+    <li>{{ type }}: {{ sold_units }}</li>
+  {% endfor %}
+</ul>
+
+<!-- Display the total sold units by device -->
+<h2>Total Sold Units by Device</h2>
+<ul>
+  {% for device, sold_units in total_sold_units_by_device.items() %}
+    <li>{{ device }}: {{ sold_units }}</li>
+  {% endfor %}
+</ul>
+
+<!-- Display the pivot table -->
+<h2>Sold Units for Each Device and Type</h2>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Device \ Type</th>
+      {% for type in pivot_table.columns %}
+        <th>{{ type }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for device, row in pivot_table.iterrows() %}
+      <tr>
+        <td>{{ device }}</td>
+        {% for value in row %}
+          <td>{{ value }}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Display the total sold units by strain -->
+<h2>Total Sold Units by Strain</h2>
+<ul>
+  {% for strain, sold_units in total_sold_units_by_strain.items() %}
+    <li>{{ strain }}: {{ sold_units }}</li>
+  {% endfor %}
+</ul>
+  
+</body>
+</html>
